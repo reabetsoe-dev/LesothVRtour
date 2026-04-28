@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lesotho VR Travel Experience</title>
+  <style>
+    :root {
+      --sky-1: #081f3a;
+      --sky-2: #10385e;
+      --earth-1: #32543f;
+      --earth-2: #6f4d2d;
+      --glass: rgba(7, 22, 41, 0.72);
+      --glass-2: rgba(10, 34, 59, 0.58);
+      --text-main: #f7f5ef;
+      --text-soft: #d4dfeb;
+      --line: rgba(168, 198, 226, 0.32);
+      --cta: #f18805;
+      --cta-2: #ff5d2b;
+      --cta-hover: #ff7a00;
+      --focus: rgba(241, 136, 5, 0.45);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Trebuchet MS", "Gill Sans MT", Candara, sans-serif;
+      color: var(--text-main);
+      background:
+        radial-gradient(700px 500px at 12% 16%, rgba(0, 200, 255, 0.22), transparent 65%),
+        radial-gradient(800px 600px at 90% 84%, rgba(255, 161, 53, 0.24), transparent 68%),
+        linear-gradient(155deg, var(--sky-1), var(--sky-2) 42%, var(--earth-1) 74%, var(--earth-2));
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(35deg, rgba(255, 255, 255, 0.06) 0 2px, transparent 2px 22px),
+        repeating-linear-gradient(-25deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 18px);
+      opacity: 0.2;
+      pointer-events: none;
+    }
+
+    .landing {
+      width: min(1080px, 100%);
+      position: relative;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 18px;
+      padding: clamp(20px, 3.8vw, 38px);
+      border-radius: 26px;
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01)),
+        var(--glass);
+      backdrop-filter: blur(9px);
+      box-shadow: 0 26px 50px rgba(0, 0, 0, 0.45);
+      animation: reveal 800ms ease-out;
+    }
+
+    .landing::after {
+      content: "";
+      position: absolute;
+      top: -110px;
+      right: -100px;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0));
+      opacity: 0.25;
+      pointer-events: none;
+    }
+
+    .intro {
+      padding-right: clamp(2px, 1vw, 14px);
+    }
+
+    .kicker {
+      margin: 0;
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #95d0ff;
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(149, 208, 255, 0.45);
+      background: rgba(11, 39, 68, 0.65);
+    }
+
+    h1 {
+      margin: 14px 0 12px;
+      font-family: "Bodoni MT", Didot, "Times New Roman", serif;
+      font-size: clamp(2rem, 4.4vw, 3.45rem);
+      line-height: 1.08;
+      letter-spacing: 0.01em;
+      text-wrap: balance;
+    }
+
+    .intro-text {
+      margin: 0;
+      color: var(--text-soft);
+      line-height: 1.72;
+      font-size: clamp(1rem, 1.2vw, 1.2rem);
+      max-width: 62ch;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .meta-row li {
+      padding: 8px 12px;
+      border-radius: 11px;
+      border: 1px solid rgba(184, 209, 231, 0.3);
+      background: rgba(7, 28, 50, 0.58);
+      color: #d7e7f4;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .side {
+      border-radius: 18px;
+      border: 1px solid rgba(179, 206, 230, 0.22);
+      background: var(--glass-2);
+      padding: 16px;
+      display: grid;
+      gap: 16px;
+      align-content: start;
+    }
+
+    .block h2 {
+      margin: 0 0 10px;
+      font-size: 0.86rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #9dd2ff;
+      font-weight: 800;
+    }
+
+    .controls {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 10px;
+    }
+
+    .controls li {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+      color: #e1edf7;
+      font-size: 0.98rem;
+    }
+
+    .keys {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      flex-wrap: wrap;
+      min-width: 140px;
+    }
+
+    kbd {
+      min-width: 26px;
+      text-align: center;
+      font-family: Consolas, "Lucida Console", monospace;
+      font-size: 0.83rem;
+      font-weight: 700;
+      color: #f7fbff;
+      padding: 6px 8px;
+      border-radius: 7px;
+      border: 1px solid rgba(245, 251, 255, 0.32);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.23), rgba(255, 255, 255, 0.08));
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    }
+
+    .features {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 9px;
+    }
+
+    .features li {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(182, 210, 234, 0.26);
+      background: rgba(13, 44, 74, 0.52);
+      color: #e0ebf5;
+      font-weight: 600;
+    }
+
+    .cta-wrap {
+      margin-top: 26px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .cta-wrap p {
+      margin: 0;
+      color: #d5e4f1;
+      font-size: 1rem;
+    }
+
+    .start-btn {
+      position: relative;
+      isolation: isolate;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      border-radius: 999px;
+      border: none;
+      padding: 14px 24px;
+      font-family: "Franklin Gothic Medium", "Arial Narrow", sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #fff;
+      background: linear-gradient(135deg, var(--cta), var(--cta-2));
+      box-shadow: 0 12px 28px rgba(241, 93, 43, 0.4);
+      transition: transform 200ms ease, box-shadow 220ms ease, filter 220ms ease;
+    }
+
+    .start-btn::after {
+      content: ">";
+      font-size: 1.05rem;
+      transform: translateX(0);
+      transition: transform 200ms ease;
+    }
+
+    .start-btn::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background: linear-gradient(120deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0));
+      z-index: -1;
+      opacity: 0.5;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 32px rgba(255, 93, 43, 0.52);
+      filter: saturate(1.08);
+      background: linear-gradient(135deg, var(--cta-hover), var(--cta-2));
+    }
+
+    .start-btn:hover::after {
+      transform: translateX(2px);
+    }
+
+    .start-btn:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(15px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 900px) {
+      .landing {
+        grid-template-columns: 1fr;
+      }
+
+      .intro {
+        padding-right: 0;
+      }
+
+      .cta-wrap {
+        align-items: center;
+      }
+
+      .cta-wrap p {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 14px;
+      }
+
+      .landing {
+        border-radius: 18px;
+        padding: 16px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="landing">
+    <section class="intro">
+      <p class="kicker">Lesotho Highlands</p>
+      <h1>Lesotho VR Travel Experience</h1>
+      <p class="intro-text">
+        Explore famous landmarks of Lesotho in an interactive 3D environment.
+        Navigate using your keyboard and mouse while discovering real-world locations with guided narration.
+      </p>
+      <ul class="meta-row">
+        <li>Immersive 3D Journey</li>
+        <li>Guided Narration</li>
+        <li>Desktop Controls</li>
+      </ul>
+      <div class="cta-wrap">
+        <p>Click below to begin your journey.</p>
+        <a id="startTourLink" class="start-btn" href="docs/starttour.html">Start Virtual Tour</a>
+      </div>
+    </section>
+
+    <aside class="side">
+      <section class="block">
+        <h2>Controls</h2>
+        <ul class="controls">
+          <li>
+            <span class="keys">
+              <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+            </span>
+            <span>Move</span>
+          </li>
+          <li>
+            <span class="keys"><kbd>Mouse</kbd></span>
+            <span>Look around</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="block">
+        <h2>Features</h2>
+        <ul class="features">
+          <li>Map-based locations</li>
+          <li>Interactive landmarks</li>
+          <li>Voice narration</li>
+        </ul>
+      </section>
+    </aside>
+  </main>
+
+</body>
+</html>
